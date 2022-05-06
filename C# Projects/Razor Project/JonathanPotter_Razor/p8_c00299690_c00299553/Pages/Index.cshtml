@@ -1,0 +1,67 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<!--Jonathan Potter Ryan Hebert
+    C00299690    C00299553
+    CMPS 358
+    project #8 -->
+
+<style>
+    .hide { 
+        display:  none;
+    } 
+</style>
+<h1>Jonathan Potter & Ryan Hebert P8</h1>
+<br/><br/>
+<input type="hidden" asp-for="discontinued_bound_property" value="placeholder-value">
+    <button type="submit" onclick="show()"> See Discontinued Items</button>
+<br><br>
+<p id="Discontinued" class="hide">@DiscontinuedItems.GetDiscontinuedItems(@Model.discontinued_bound_property)</p>
+<br/>
+
+<h4>For Customer Search</h4>
+<form method="post" enctype="multipart/form-data">
+    Enter a country: 
+    <input type="text" asp-for="Country">
+    <input type="submit" value="Submit">
+    </form>
+<br><br>
+<p>@GetCustomers.GetCustomer(@Model.Country)</p>
+<br/>
+
+<h4>For Supplier Search</h4>
+<form method="post" enctype="multipart/form-data">
+    Enter a country: 
+    <input type="text" asp-for="Country2">
+    <input type="submit" value="Submit">
+    </form>
+<br><br>
+<p>@GetSuppliers.GetSupplier(@Model.Country2)</p>
+<br/>
+
+<h4>For Supplier Product Search</h4>
+<form method="post" enctype="multipart/form-data">
+    Enter a supplier: 
+    <input type="text" asp-for="Supplier">
+    <input type="submit" value="Submit">
+    </form>
+<br><br>
+<p>@ListProducts.ListProduct(@Model.Supplier)</p>
+<br/>
+
+<h4>For Order Search</h4>
+<form method="post" enctype="multipart/form-data">
+    Enter an Order Number: 
+    <input type="text" asp-for="OrderNumber">
+    <input type="submit" value="Submit">
+    </form>
+<br><br>
+<p>@OrderDetails.OrderDetail(@Model.OrderNumber)</p>
+
+<script>
+      function show() {
+        $("#Discontinued").removeClass("hide");
+      }
+    </script>

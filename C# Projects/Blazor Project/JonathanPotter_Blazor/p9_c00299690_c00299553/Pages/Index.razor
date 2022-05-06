@@ -1,0 +1,101 @@
+<!-- 
+Jonathan Potter Ryan Hebert
+C00299690 C00299553
+CMPS 358
+project #9 -->
+@page "/"
+
+@using p9_c00299690_c00299553.Models
+@using Microsoft.AspNetCore.Components
+
+@inject p9_c00299690_c00299553.Data.InventoryContext _context
+
+@code {
+ private Inventory inventory = new Inventory();
+ private async void HandleValidSubmit()
+ {
+ try
+ {
+ _context.Add(inventory);
+ await _context.SaveChangesAsync();
+ }
+ catch
+ {
+ base.StateHasChanged();
+ }
+ inventory = new Inventory();
+ base.StateHasChanged();
+ }
+
+ private IOrderedQueryable<Inventory> GetInventory()
+ {
+  try
+  {
+   var results =
+    from row in _context.Inventories
+    orderby row.Id
+    select row;
+
+   if (!results.Any())
+   {
+    return null;
+   }
+   return results;
+  } catch
+  {
+   return null;
+  }
+  return null;
+ }
+
+ private async void DeleteItem(Inventory r)
+ {
+  _context.Inventories.Remove(r);
+  _context.SaveChanges();
+ }
+}
+<div class="reminder-form">
+ <EditForm Model=@inventory OnValidSubmit=@HandleValidSubmit>
+  <DataAnnotationsValidator />
+  <ValidationSummary />
+  <div class="form-group">
+   <label for="ItemName">ItemName</label>
+   <InputText id="ItemName" class="form-control"
+              @bind-Value="inventory.ItemName" />
+  </div>
+  <div class="form-group">
+   <label for="Location">Location</label>
+   <InputText id="Location" class="form-control"
+              @bind-Value="inventory.Location" />
+  </div>
+  <div class="form-group">
+   <label for="Value">Value</label>
+   <InputNumber id="Value" class="form-control"
+                @bind-Value="inventory.Value" />
+  </div>
+  <br/>
+  <button class="btn btn-primary" type="submit">
+   Create New Item</button>
+ </EditForm>
+</div>
+
+<style>
+ th{ padding : 10px;}
+ td{ padding : 10px;}
+ tr{ border : solid;
+     border-width : thin;}
+</style>
+
+<div class="inventory-display">
+ <br/>
+ Inventory:<br/><br/>
+ <table><tr><th>Item Name</th><th>Location</th><th>Value</th><th></th></tr>
+ @foreach (var r in GetInventory())
+ {
+  <tr> <td>@r.ItemName</td> <td>@r.Location</td> <td>@r.Value</td><td><span class="btn btn-primary" @onclick="@(() => { DeleteItem(r); })">Delete</span></td></tr>
+                                                                                 
+ }
+ </table>
+</div>
+
+
